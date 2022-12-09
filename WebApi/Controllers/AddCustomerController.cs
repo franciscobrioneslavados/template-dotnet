@@ -1,7 +1,7 @@
 using Domain.Contracts.UseCases.AddCustomer;
-using Microsoft.AspNetCore.Http;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Customers;
+using WebApi.Models.Error;
 
 namespace WebApi.Controllers
 {
@@ -10,16 +10,23 @@ namespace WebApi.Controllers
     public class AddCustomerController : ControllerBase
     {
         private readonly IAddCustomerUseCase _addCustomerUseCases;
+        private readonly IValidator<AddCustomerInput> _addCustomerInputValidator;
 
 
-        public AddCustomerController(IAddCustomerUseCase addCustomerUseCases)
+        public AddCustomerController(IAddCustomerUseCase addCustomerUseCase, IValidator<AddCustomerInput> addCustomerInputValidator)
         {
-            _addCustomerUseCases = addCustomerUseCases;
+            _addCustomerUseCases = addCustomerUseCase;
+            _addCustomerInputValidator = addCustomerInputValidator;
         }
 
         [HttpPost]
         public IActionResult AddCustomer(AddCustomerInput input)
         {
+            var validationResult = _addCustomerInputValidator.Validate(input);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors.ToCustomValidationFailure());
+            }
             var customer = new Domain.Entities.Customer(input.Name, input.Email, input.Document);
             _addCustomerUseCases.AddCustomer(customer);
             return Created("", customer);

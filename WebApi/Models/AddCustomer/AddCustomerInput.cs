@@ -1,6 +1,4 @@
 
-namespace WebApi.Models.Customers;
-
 public class AddCustomerInput
 {
     public string Name { get; set; } = string.Empty;

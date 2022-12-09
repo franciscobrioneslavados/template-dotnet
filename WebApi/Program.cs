@@ -1,7 +1,10 @@
+using System.Globalization;
 using Application.UseCases.AddCustomer;
 using Domain.Contracts.Repositories.AddCustomer;
 using Domain.Contracts.UseCases.AddCustomer;
+using FluentValidation;
 using Infra.Repository.Repositories.AddCutomer;
+using WebApi.Models.AddCustomer;
 
 namespace WebApi
 {
@@ -14,12 +17,15 @@ namespace WebApi
             // Add services to the container.
             builder.Services.AddSingleton<IAddCustomerRepository, AddCustomerRepository>();
             builder.Services.AddScoped<IAddCustomerUseCase, AddCustomerUseCase>();
+            builder.Services.AddTransient<IValidator<AddCustomerInput>, AddCustomerInputValidator>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            // builder.Configuration.AddJsonFile("appsettings.json");
+            // builder.Configuration.AddJsonFile("appsettings.{env.EnvironmentName}.json");
+            // builder.Configuration.AddEnvironmentVariables();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,6 +40,10 @@ namespace WebApi
             app.UseAuthorization();
 
             app.MapControllers();
+
+            var cultureInfo = new CultureInfo("es-ES");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             app.Run();
 
