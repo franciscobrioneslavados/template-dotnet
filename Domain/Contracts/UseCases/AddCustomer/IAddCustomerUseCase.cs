@@ -2,7 +2,7 @@ using Domain.Entities;
 
 namespace Domain.Contracts.UseCases.AddCustomer
 {
-    public interface IAddCustomerUseCases
+    public interface IAddCustomerUseCase
     {
         void AddCustomer(Customer customer);
     }

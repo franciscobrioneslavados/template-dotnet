@@ -7,5 +7,9 @@ public class AddCustomerInput
     public string Email { get; set; } = string.Empty;
     public string Document { get; set; } = string.Empty;
 
+    public bool isValid()
+    {
+        return Name != string.Empty && Email != string.Empty && Email.Contains("@") && Email.Contains(".") && Document != string.Empty;
+    }
 
 }

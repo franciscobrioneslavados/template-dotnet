@@ -7,13 +7,12 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class AddCustomerController : ControllerBase
     {
-        private readonly IAddCustomerUseCases _addCustomerUseCases;
+        private readonly IAddCustomerUseCase _addCustomerUseCases;
 
 
-        public AddCustomerController(IAddCustomerUseCases addCustomerUseCases)
+        public AddCustomerController(IAddCustomerUseCase addCustomerUseCases)
         {
             _addCustomerUseCases = addCustomerUseCases;
         }
@@ -23,7 +22,7 @@ namespace WebApi.Controllers
         {
             var customer = new Domain.Entities.Customer(input.Name, input.Email, input.Document);
             _addCustomerUseCases.AddCustomer(customer);
-            return Created("", input);
+            return Created("", customer);
         }
     }
 }
